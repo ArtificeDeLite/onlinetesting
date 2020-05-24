@@ -1,16 +1,15 @@
 package com.semenov.onlinetesting.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Question {
 
-    private int id;
+    private Integer id;
     private String question;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String answer;
 
-    public Question(int id, String question, String answer) {
+    public Question(Integer id, String question, String answer) {
         this.id = id;
         this.question = question;
         this.answer = answer;
@@ -19,11 +18,11 @@ public class Question {
     public Question() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

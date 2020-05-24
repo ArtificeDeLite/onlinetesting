@@ -51,4 +51,14 @@ public class ResultTo {
     public void setResult(boolean result) {
         this.result = result;
     }
+
+    @Override
+    public String toString() {
+        return "ResultTo{" +
+                "id=" + id +
+                ", question=" + question +
+                ", userAnswer='" + userAnswer + '\'' +
+                ", result=" + result +
+                '}';
+    }
 }

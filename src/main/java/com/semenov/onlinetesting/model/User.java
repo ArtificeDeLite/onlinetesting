@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class User implements UserDetails {
 
-    private int id;
+    private Integer id;
     private String login;
     private String password;
     private Set<Role> roles;
@@ -19,18 +19,18 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(int id, String login, String password, Role role) {
+    public User(Integer id, String login, String password, Role role) {
         this.id = id;
         this.login = login;
         this.password = password;
         this.roles = Collections.singleton(role);
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -22,9 +22,9 @@ public interface ResultRepository {
 
     int countPassedById(int userId);
 
-    public int countAbove(int rightAnswersCount);
+    int countAbove(int rightAnswersCount);
 
-    public int countBelow(int rightAnswersCount);
+    int countBelow(int rightAnswersCount);
 
-    public int countQuestions(int numberOfQuestions);
+    int countQuestions(int numberOfQuestions);
 }

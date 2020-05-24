@@ -35,7 +35,11 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public int count() {
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users", Integer.class);
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users", Integer.class);
+        if (count != null) {
+            return count;
+        }
+        return 0;
     }
 
     @Override

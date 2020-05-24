@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.semenov.onlinetesting.util.ValidationUtil.notBlankCheck;
+import static com.semenov.onlinetesting.util.ValidationUtil.numberCheck;
+
 @Service
 public class QuestionService {
 
@@ -19,6 +22,7 @@ public class QuestionService {
     }
 
     public Question getByNumber(int number) {
+        numberCheck(number);
         List<Question> questions = repository.findAll();
         if (questions.size() < number - 1) {
             throw new NotFoundException("Question does not exist");
@@ -27,6 +31,8 @@ public class QuestionService {
     }
 
     public Question addNew(Question question) {
+        notBlankCheck(question.getQuestion(), "Question");
+        notBlankCheck(question.getAnswer(), "Answer");
         return repository.save(question);
     }
 

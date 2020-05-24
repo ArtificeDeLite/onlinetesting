@@ -1,7 +1,6 @@
 package com.semenov.onlinetesting.repository;
 
 import com.semenov.onlinetesting.model.Question;
-import com.semenov.onlinetesting.model.User;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

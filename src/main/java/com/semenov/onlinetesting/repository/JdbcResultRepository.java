@@ -1,7 +1,6 @@
 package com.semenov.onlinetesting.repository;
 
 import com.semenov.onlinetesting.To.ResultTo;
-import com.semenov.onlinetesting.controller.QuestionController;
 import com.semenov.onlinetesting.model.Result;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -70,14 +69,7 @@ public class JdbcResultRepository implements ResultRepository {
     @Override
     public List<Result> findAllByUserId(int userId) {
         return jdbcTemplate.query("SELECT * FROM results WHERE user_id=?", ROW_MAPPER, userId);
-        //return jdbcTemplate.query("SELECT * FROM results LEFT JOIN questions ON results.question_id = questions.id WHERE user_id=?", ROW_MAPPER, userId);
     }
-
-/*
-    public List<ResultTo> findAllByUserId2(int userId) {
-        //return jdbcTemplate.query("SELECT * FROM results WHERE user_id=?", ROW_MAPPER, userId);
-        return jdbcTemplate.query("SELECT * FROM results LEFT JOIN questions ON results.question_id = questions.id WHERE user_id=?", ROW_MAPPER_TO, userId);
-    }*/
 
     @Override
     public Result get(int id) {
@@ -96,7 +88,6 @@ public class JdbcResultRepository implements ResultRepository {
 
     @Override
     public int countBelow(int rightAnswersCount) {
-        //Integer count = jdbcTemplate.queryForObject("SELECT COUNT(user_id) FROM (SELECT user_id, COUNT(user_id) AS rightAnswers FROM results WHERE result=true GROUP BY user_id) as uir WHERE rightAnswers < ?", Integer.class, rightAnswersCount);
         Integer count = jdbcTemplate.queryForObject("SELECT COUNT(user_id) FROM (SELECT user_id, COUNT(user_id) AS rightAnswers FROM results WHERE result=true GROUP BY user_id) as uir WHERE rightAnswers < ?", Integer.class, rightAnswersCount);
         if (count != null) {
             return count;
@@ -130,7 +121,4 @@ public class JdbcResultRepository implements ResultRepository {
         }
         return 0;
     }
-
-
-
 }

@@ -1,7 +1,6 @@
 package com.semenov.onlinetesting.controller;
 
 import com.semenov.onlinetesting.To.ResultTo;
-import com.semenov.onlinetesting.model.Result;
 import com.semenov.onlinetesting.model.User;
 import com.semenov.onlinetesting.service.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -39,7 +39,7 @@ public class UserService implements UserDetailsService {
 
     public User create(User user) {
         User userExist = repository.getByLogin(user.getLogin());
-        if (userExist != null){
+        if (userExist != null) {
             throw new IllegalRequestDataException("login already exists");
         }
         user.setRoles(Collections.singleton(Role.USER));
