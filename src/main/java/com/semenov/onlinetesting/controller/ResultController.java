@@ -3,7 +3,6 @@ package com.semenov.onlinetesting.controller;
 import com.semenov.onlinetesting.To.ResultTo;
 import com.semenov.onlinetesting.model.Result;
 import com.semenov.onlinetesting.model.User;
-import com.semenov.onlinetesting.repository.JdbcResultRepository;
 import com.semenov.onlinetesting.service.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,9 +19,6 @@ public class ResultController {
     static final String REST_URL = "/testing/result";
 
     @Autowired
-    JdbcResultRepository repository;
-
-    @Autowired
     ResultService service;
 
     @GetMapping
@@ -30,8 +26,4 @@ public class ResultController {
         return service.get(authUser.getId());
     }
 
-    @GetMapping("/2")
-    public List<Result> get(@AuthenticationPrincipal User authUser) {
-        return service.getAllByUserId(authUser.getId());
-    }
 }

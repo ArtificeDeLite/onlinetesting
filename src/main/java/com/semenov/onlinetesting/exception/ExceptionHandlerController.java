@@ -1,4 +1,4 @@
-package com.semenov.onlinetesting.util;
+package com.semenov.onlinetesting.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +11,11 @@ public class ExceptionHandlerController {
     @ExceptionHandler(value = IllegalRequestDataException.class)
     public ResponseEntity<Object> exception(IllegalRequestDataException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(value = NotFoundException.class)
+    public ResponseEntity<Object> exception(NotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
 }

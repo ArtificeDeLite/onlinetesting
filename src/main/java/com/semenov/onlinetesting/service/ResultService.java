@@ -11,6 +11,7 @@ import com.semenov.onlinetesting.repository.JdbcResultRepository;
 import com.semenov.onlinetesting.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -28,22 +29,40 @@ public class ResultService {
     @Autowired
     UserRepository userRepository;
 
+    @Transactional
     public List<ResultTo> get(int userId) {
         List<Result> results = repository.findAllByUserId(userId);
         List<Question> questions = questionRepository.findAll();
 
         Map<Integer, Question> map = questions.stream().collect(Collectors.toMap(Question::getId, q -> q));
 
-        List<ResultTo> resultsTo = results.stream()
+        return results.stream()
                 .map(r -> new ResultTo(r.getId(), map.get(r.getQuestionId()), r.getUserAnswer(), r.isResult()))
                 .collect(Collectors.toList());
-        return resultsTo;
     }
 
     public List<Result> getAllByUserId(int userId) {
         return repository.findAllByUserId(userId);
     }
 
+    @Transactional
+    public Result resisterAnswer(Question question, String answer, int userId) {
+        List<Result> results = repository.findAllByUserId(userId);
+        for (Result result : results) {
+            if (result.getQuestionId() == question.getId()) {
+                return result;
+            }
+        }
+
+        boolean check = false;
+        if (question.getAnswer().toLowerCase().equals(answer.toLowerCase())) {
+            check = true;
+        }
+        return repository.save(new Result(null, userId, question.getId(), answer, check));
+
+    }
+
+    @Transactional
     public UserStatistics getUserStat(int userId) {
         UserStatistics statistics = new UserStatistics();
 
@@ -62,6 +81,7 @@ public class ResultService {
         return statistics;
     }
 
+    @Transactional
     public Statistics getStat() {
         Statistics statistics = new Statistics();
 

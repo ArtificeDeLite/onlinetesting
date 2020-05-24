@@ -5,7 +5,8 @@ import com.semenov.onlinetesting.model.Result;
 import com.semenov.onlinetesting.model.User;
 import com.semenov.onlinetesting.repository.JdbcQuestionRepository;
 import com.semenov.onlinetesting.repository.JdbcResultRepository;
-import com.semenov.onlinetesting.util.IllegalRequestDataException;
+import com.semenov.onlinetesting.service.QuestionService;
+import com.semenov.onlinetesting.service.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,11 +15,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.semenov.onlinetesting.util.ValidationUtil.notBlankCheck;
+import static com.semenov.onlinetesting.util.ValidationUtil.numberCheck;
+
 @RestController
 @RequestMapping(value = QuestionController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class QuestionController {
 
-    static final String REST_URL = "/testing";
+    public static final String REST_URL = "/testing";
 
     public static final int NUMBER_OF_QUESTIONS = 5;
 
@@ -28,58 +32,39 @@ public class QuestionController {
     @Autowired
     JdbcResultRepository resultRepository;
 
+    @Autowired
+    QuestionService service;
+
+    @Autowired
+    ResultService resultService;
+
     @GetMapping("/{number}")
     public Question get(@PathVariable int number) {
         numberCheck(number);
-        List<Question> questions = repository.findAll();
-        return questions.get(number);
+        return service.getByNumber(number);
     }
 
     @GetMapping
     public List<Question> getAll() {
-        return repository.findAll();
+        return service.getAll();
     }
 
     @PostMapping(value = "/{number}")
     public Result answer(@PathVariable int number, @RequestBody String answer, @AuthenticationPrincipal User authUser) {
         numberCheck(number);
-        if (answer == null || answer.isEmpty()) {
-            throw new IllegalRequestDataException("Answer must not be blank");
-        }
-        List<Question> questions = repository.findAll();
+        notBlankCheck(answer, "Answer");
+        List<Question> questions = service.getAll();
         Question currentQuestion = questions.get(number);
 
-        List<Result> results = resultRepository.findAllByUserId(authUser.getId());
-
-        for (Result result : results) {
-            if (result.getQuestionId() == currentQuestion.getId()) {
-                return result;
-            }
-        }
-
-        boolean check = false;
-        if (questions.get(number).getAnswer().toLowerCase().equals(answer.toLowerCase())) {
-            check = true;
-        }
-        return resultRepository.save(new Result(null, authUser.getId(), questions.get(number).getId(), answer, check));
+        return resultService.resisterAnswer(currentQuestion, answer, authUser.getId());
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public Question add(@RequestBody Question question) {
-        if (question.getQuestion() == null) {
-            throw new IllegalRequestDataException("question must not be null");
-        }
-        if (question.getAnswer() == null) {
-            throw new IllegalRequestDataException("answer must not be null");
-        }
 
-        return repository.save(question);
-    }
-
-    private void numberCheck(int number) {
-        if (number <= 0 || number > NUMBER_OF_QUESTIONS) {
-            throw new IllegalRequestDataException("wrong number of question");
-        }
+        notBlankCheck(question.getQuestion(), "Question");
+        notBlankCheck(question.getAnswer(), "Answer");
+        return service.addNew(question);
     }
 }

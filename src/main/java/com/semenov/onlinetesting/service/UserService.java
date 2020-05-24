@@ -3,17 +3,17 @@ package com.semenov.onlinetesting.service;
 import com.semenov.onlinetesting.model.Role;
 import com.semenov.onlinetesting.model.User;
 import com.semenov.onlinetesting.repository.UserRepository;
-import com.semenov.onlinetesting.util.IllegalRequestDataException;
+import com.semenov.onlinetesting.exception.IllegalRequestDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -21,10 +21,11 @@ public class UserService implements UserDetailsService {
     @Autowired
     UserRepository repository;
 
-    //@Autowired
-    //BCryptPasswordEncoder passwordEncoder;
-
     PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+
+    public List<User> getAll() {
+        return repository.findAll();
+    }
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
