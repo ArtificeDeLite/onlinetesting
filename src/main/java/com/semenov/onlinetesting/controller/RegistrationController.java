@@ -30,6 +30,13 @@ public class RegistrationController {
 
     @PostMapping
     public ResponseEntity<UserTo> register(@RequestBody User user) {
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
+            throw new IllegalRequestDataException("Login must not be blank");
+        }
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new IllegalRequestDataException("Password must not be blank");
+        }
+
         User created = service.create(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(QuestionController.REST_URL + "/1").build().toUri();

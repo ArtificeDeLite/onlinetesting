@@ -12,10 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = QuestionController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -46,6 +43,9 @@ public class QuestionController {
     @PostMapping(value = "/{number}")
     public Result answer(@PathVariable int number, @RequestBody String answer, @AuthenticationPrincipal User authUser) {
         numberCheck(number);
+        if (answer == null || answer.isEmpty()) {
+            throw new IllegalRequestDataException("Answer must not be blank");
+        }
         List<Question> questions = repository.findAll();
         Question currentQuestion = questions.get(number);
 
